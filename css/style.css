@@ -1013,7 +1013,7 @@ address span a {
 /*FOOTER STYLE*/
 
 #footer {
-  padding-bottom: 35px;
+  padding-bottom: 15px;
   padding-top: 60px;
   background-color: #000;
   color: #aaa;
@@ -1024,7 +1024,7 @@ address span a {
   font-size: 12px;
   line-height: 22px;
   text-align: center;
-  padding-bottom: 5px;
+  padding-bottom: 50px;
 }
 
 #footer .fa {
