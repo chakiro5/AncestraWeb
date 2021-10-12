@@ -16,4 +16,18 @@ router.post('/', async (req, res) => {
     });
 });
 
+router.put('/:id', async (req, res) => {
+    await Producto.findByIdAndUpdate(req.params.id, req.body);
+    res.json({
+            status: 'Producto actulizado'
+     });
+});
+
+router.delete('/:id', async (req, res) => {
+    await Producto.findByIdAndRemove(req.params.id);
+    res.json({
+            status: 'Producto eliminado'
+     });
+});
+
 module.exports = router;
