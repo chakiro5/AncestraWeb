@@ -29,10 +29,16 @@
                 <div class="form-group">
                         <input type="text" v-model="producto.observaciones" placeholder="">
                     </div>
-                <div class="form-group pt-2">
-                        <button class="btn btn-primary">REGISTRAR</button>
-
+                <template v-if ="edit===false">
+                    <div class="form-group pt-2">
+                        <button class="btn btn-primary">Registrar</button>
                     </div>
+                </template>
+                <template v-else>
+                    <div class="form-group pt-2">
+                        <button class="btn btn-primary">Actualizar</button>
+                    </div>
+                </template>
             </form>
         </div>
         <div class="col-md-6 pt-3">
@@ -55,6 +61,16 @@
                         <td>{{producto.precioProducto}}</td>
                         <td>{{producto.informacionVededor}}</td>
                         <td>{{producto.observaciones}}</td>
+                        <td>
+                            <button @click="eliminarProducto(producto._id)" class="btm btn-danger">
+                                Eliminar
+                            </button>
+                        </td>
+                        <td>
+                            <button @click="actualizarProducto(producto._id)" class="btm btn-secondary">
+                                Actualizar
+                            </button>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -78,7 +94,9 @@ export default {
     data(){
         return{
             producto: new Producto(),
-            productos: []
+            productos: [],
+            edit: false,
+            id_actulizar: ''
         }
     },
     created(){
@@ -86,7 +104,8 @@ export default {
     },
     methods:{
         addProducto(){
-            fetch('/api/productos',{
+            if(this.edit===false){
+                fetch('/api/productos',{
                 method: 'POST', 
                 body: JSON.stringify(this.producto),
                 headers: {
@@ -98,6 +117,21 @@ export default {
             .then(data => {
                 this.getProductos();
             })
+        } else{
+            fetch('/api/productos/'+this.id_actulizar,{
+                method: 'PUT', 
+                body: JSON.stringify(this.producto),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-type': 'application/json'
+                }  
+            })
+            .then(res => res.json())
+            .then(data => {
+                this.getProductos();
+                this.edit=false;
+            });
+        }
             this.producto = new Producto();
         },
         getProductos(){
@@ -105,9 +139,31 @@ export default {
             .then(res => res.json())
             .then(data => {
                 this.productos = data;
-                console.log(this.productos)
+            });
+        },
+        eliminarProducto(id){
+            fetch('/api/productos/'+id,{
+              method: 'DELETE', 
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-type': 'application/json'
+                }  
+            })
+            .then(res => res.json())
+            .then(data => {
+                this.getProductos();
+            });
+        },
+        actualizarProducto(id){
+            fetch('/api/productos/'+id)
+            .then(res => res.json())
+            .then(data => {
+                this.producto = new Producto(data.nombreProducto, data.linkimagenProducto, data.descripcionProducto, data.precioProducto, data.informacionVededor, data.observaciones);
+                this.id_actulizar=data._id;
+                this.edit = true;
             });
         }
+
     }
 }
 </script>
