@@ -15,7 +15,7 @@ app.use(morgan('dev'));
 app.use(express.json());
 
 //Routes
-app.use('/productos', require('./routes/productos'));
+app.use('/api/productos', require('./routes/productos'));
 
 //Static Files
 app.use(express.static(__dirname + '\\public'));

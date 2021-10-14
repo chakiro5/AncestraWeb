@@ -39,22 +39,36 @@
 </template>
 
 <script>
+class Producto{
+    constructor(nombreProducto, linkimagenProducto, descripcionProducto, precioProducto, informacionVededor, observaciones){
+        this.nombreProducto = nombreProducto;
+        this.linkimagenProducto = linkimagenProducto;
+        this.descripcionProducto = descripcionProducto;
+        this.precioProducto = precioProducto;
+        this.informacionVededor = informacionVededor;
+        this.observaciones = observaciones;
+    }
+}
+
 export default {
     data(){
         return{
-            producto:{
-                    nombreProducto: '',
-                    linkimagenProducto: '',
-                    descripcionProducto: '',
-                    precioProducto: '',
-                    informacionVededor: '',
-                    observaciones: ''
-            }
+            producto: new Producto()
         }
     },
     methods:{
         addProducto(){
-            console.log(this.producto)
+            fetch('/api/productos',{
+                method: 'POST', 
+                body: JSON.stringify(this.producto),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+            .then(res => res.json())
+            .then(data => console.log(data))
+            this.producto = new Producto();
         }
     }
 }
