@@ -35,6 +35,30 @@
                     </div>
             </form>
         </div>
+        <div class="col-md-6 pt-3">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Imagen</th>
+                        <th>Descripción</th>
+                        <th>Precio</th>
+                        <th>Vendedor</th>
+                        <th>Observaciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="producto of productos">
+                        <td>{{producto.nombreProducto}}</td>
+                        <td>{{producto.linkimagenProducto}}</td>
+                        <td>{{producto.descripcionProducto}}</td>
+                        <td>{{producto.precioProducto}}</td>
+                        <td>{{producto.informacionVededor}}</td>
+                        <td>{{producto.observaciones}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </template>
 
@@ -53,8 +77,12 @@ class Producto{
 export default {
     data(){
         return{
-            producto: new Producto()
+            producto: new Producto(),
+            productos: []
         }
+    },
+    created(){
+        this.getProductos();
     },
     methods:{
         addProducto(){
@@ -67,8 +95,18 @@ export default {
                 }
             })
             .then(res => res.json())
-            .then(data => console.log(data))
+            .then(data => {
+                this.getProductos();
+            })
             this.producto = new Producto();
+        },
+        getProductos(){
+            fetch('/api/productos')
+            .then(res => res.json())
+            .then(data => {
+                this.productos = data;
+                console.log(this.productos)
+            });
         }
     }
 }
